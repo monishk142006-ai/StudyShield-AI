@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyShield AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#">StudyShield AI</a>
+
+        <div>
+            <a href="/login" class="btn btn-light me-2">Login</a>
+<a href="/register" class="btn btn-warning">Register</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container text-center mt-5">
+
+    <h1 class="display-4 fw-bold">
+        Smart Learning & Secure Quiz Platform
+    </h1>
+
+    <p class="lead mt-3">
+        AI-powered notes, quizzes, anti-cheating and progress tracking.
+    </p>
+
+    <button class="btn btn-primary btn-lg mt-3">
+        Get Started
+    </button>
+
+</div>
+<footer class="bg-dark text-white text-center p-3 mt-5">
+    © 2026 StudyShield AI | Developed by Monish K
+</footer>
+</body>
+</html>

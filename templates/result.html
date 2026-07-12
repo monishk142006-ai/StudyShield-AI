@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>StudyShield AI</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+<div class="card shadow p-5">
+
+<h1 class="text-center">
+
+🎉 Quiz Completed
+
+</h1>
+
+<h2 class="text-center text-success">
+
+Your Score : {{score}} / {{total}}
+
+</h2>
+
+<hr>
+
+{% for r in results %}
+
+<div class="mb-3">
+
+<b>Question {{r.question}}</b><br>
+
+Your Answer :
+
+{{r.user}}
+
+<br>
+
+Correct Answer :
+
+<span class="text-success">
+
+{{r.correct}}
+
+</span>
+
+</div>
+
+<hr>
+
+{% endfor %}
+
+<div class="text-center">
+
+<a href="/dashboard" class="btn btn-primary">
+
+Back to Dashboard
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+<footer class="bg-dark text-white text-center p-3 mt-5">
+    © 2026 StudyShield AI | Developed by Monish K
+</footer>
+</body>
+</html>

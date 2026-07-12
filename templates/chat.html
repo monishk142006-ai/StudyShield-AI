@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StudyShield AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-dark px-3">
+    <a class="navbar-brand" href="/dashboard">StudyShield AI</a>
+    <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
+</nav>
+
+<!-- CHAT BOX -->
+<div class="container mt-5">
+
+    <div class="card shadow p-4">
+
+        <h3 class="text-center">🤖 AI Study Chat</h3>
+        <p class="text-muted text-center">Ask anything and get answers</p>
+
+        <!-- FORM -->
+        <form method="POST">
+
+            <div class="mb-3">
+                <label class="form-label">Your Question</label>
+                <input type="text"
+                       name="question"
+                       class="form-control"
+                       placeholder="Type your question here..."
+                       required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                Ask AI
+            </button>
+
+        </form>
+
+        <!-- ANSWER BOX -->
+        {% if answer %}
+        <div class="alert alert-success mt-4">
+            <h6>Answer:</h6>
+            <p>{{ answer }}</p>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+<footer class="bg-dark text-white text-center p-3 mt-5">
+    © 2026 StudyShield AI | Developed by Monish K
+</footer>
+</body>
+</html>
