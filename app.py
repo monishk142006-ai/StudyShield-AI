@@ -31,11 +31,12 @@ app.permanent_session_lifetime = timedelta(days=30)
 app.secret_key = "studyshield_secret_key"
 
 # MySQL Configuration
-app.config['MYSQL_HOST'] = os.getenv("MYSQLHOST")
-app.config['MYSQL_USER'] = os.getenv("MYSQLUSER")
-app.config['MYSQL_PASSWORD'] = os.getenv("MYSQLPASSWORD")
-app.config['MYSQL_DB'] = os.getenv("MYSQLDATABASE")
-app.config['MYSQL_PORT'] = int(os.getenv("MYSQLPORT"))
+print("MYSQLHOST:", os.getenv("MYSQLHOST"))
+print("MYSQLPORT:", os.getenv("MYSQLPORT"))
+print("MYSQLUSER:", os.getenv("MYSQLUSER"))
+print("MYSQLDATABASE:", os.getenv("MYSQLDATABASE"))
+
+app.config['MYSQL_PORT'] = int(os.getenv("MYSQLPORT", "3306"))
 
 mysql = MySQL(app)
 
