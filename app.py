@@ -142,8 +142,9 @@ def chat():
             cur.close()
 
         except Exception as e:
-
-            answer = f"Error: {str(e)}"
+            import traceback
+            traceback.print_exc()
+    answer = str(e)
 
     return render_template(
         'chat.html',
@@ -402,11 +403,9 @@ Study Material:
                     summary = "Only PDF, JPG, JPEG and PNG files are supported."
 
             except Exception as e:
-
-                return render_template(
-                    "error.html",
-                    error=str(e)
-                )
+              import traceback
+    traceback.print_exc()
+    answer = str(e)
 
     return render_template(
         "notes.html",
