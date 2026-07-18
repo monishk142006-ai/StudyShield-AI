@@ -1,6 +1,6 @@
 Flask
 Flask-MySQLdb
-google-generativeai
+google-genai
 python-dotenv
 PyPDF2
 Pillow

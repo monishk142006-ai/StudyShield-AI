@@ -4,15 +4,13 @@ import json
 import PyPDF2
 import os
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
 
 load_dotenv()
 
-genai.configure(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 print("API KEY:", os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-2.5-flash")
+
 
 
 from flask import Flask, render_template, request, session, redirect, url_for
@@ -110,35 +108,47 @@ def dashboard():
 # ---------------- CHAT AI PAGE ----------------
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
+
     if 'user' not in session:
         return redirect(url_for('login'))
 
     answer = None
 
     if request.method == 'POST':
+
         question = request.form['question']
 
         try:
-            response = model.generate_content(question)
+
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=question
+            )
+
             answer = response.text
 
             cur = mysql.connection.cursor()
+
             cur.execute("""
                 INSERT INTO chat_history(user_email, question, answer)
                 VALUES(%s, %s, %s)
-            """, (session['user'], question, answer))
+            """, (
+                session['user'],
+                question,
+                answer
+            ))
 
             mysql.connection.commit()
             cur.close()
 
         except Exception as e:
-            if "429" in str(e):
-                answer = "⚠️ Gemini API limit reached. Please wait a minute and try again."
-            else:
-                answer = f"Error: {e}"
 
-    return render_template('chat.html', answer=answer)
+            answer = f"Error: {str(e)}"
 
+    return render_template(
+        'chat.html',
+        answer=answer
+    )
 # ---------------- LOGOUT ----------------
 @app.route('/logout')
 def logout():
