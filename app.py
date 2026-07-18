@@ -250,7 +250,10 @@ Notes:
 
     try:
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
+          )
 
         quiz_text = response.text
 
@@ -323,31 +326,23 @@ def notes():
 
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filepath)
+
             cur = mysql.connection.cursor()
             cur.execute("""
-                      INSERT INTO notes_history(user_email, file_name, file_type)
-                      VALUES(%s,%s,%s)
-                       """,   
-           
-                 (
-                  session['user'],
-                  file.filename,
-                 filename.split(".")[-1]
-                 ))
+                INSERT INTO notes_history(user_email, file_name, file_type)
+                VALUES(%s,%s,%s)
+            """, (
+                session['user'],
+                file.filename,
+                filename.split(".")[-1]
+            ))
 
             mysql.connection.commit()
             cur.close()
 
-
-
-
-
-
-
-
             try:
 
-                # ---------------- PDF ----------------
+                # ---------- PDF ----------
                 if filename.endswith('.pdf'):
 
                     text = ""
@@ -357,7 +352,6 @@ def notes():
                         reader = PyPDF2.PdfReader(pdf_file)
 
                         for page in reader.pages:
-
                             page_text = page.extract_text()
 
                             if page_text:
@@ -381,19 +375,25 @@ Study Material:
 {text[:6000]}
 """
 
-                    response = model.generate_content(prompt)
+                    response = client.models.generate_content(
+                        model="gemini-2.5-flash",
+                        contents=prompt
+                    )
 
                     summary = response.text
 
-                # ---------------- IMAGE ----------------
+                # ---------- IMAGE ----------
                 elif filename.endswith(('.jpg', '.jpeg', '.png')):
 
                     image = Image.open(filepath)
 
-                    response = model.generate_content([
-                        "Read this study note image. Give a summary, important key points and five viva questions.",
-                        image
-                    ])
+                    response = client.models.generate_content(
+                        model="gemini-2.5-flash",
+                        contents=[
+                            "Read this study note image. Give a summary, important key points and five viva questions.",
+                            image
+                        ]
+                    )
 
                     summary = response.text
 
@@ -402,19 +402,16 @@ Study Material:
                     summary = "Only PDF, JPG, JPEG and PNG files are supported."
 
             except Exception as e:
-              return render_template(
-        "error.html",
-        error=str(e)
-    )
+
+                return render_template(
+                    "error.html",
+                    error=str(e)
+                )
 
     return render_template(
         "notes.html",
-        summary= summary
+        summary=summary
     )
-
-
-
-
 
 
 
