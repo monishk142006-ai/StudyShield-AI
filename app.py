@@ -318,40 +318,37 @@ def notes():
 
         file = request.files['pdf']
 
-        if file:
+        if file and file.filename != "":
 
-            filename = file.filename.lower()
-
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            filename = file.filename
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
 
+            # Save upload history
             cur = mysql.connection.cursor()
             cur.execute("""
                 INSERT INTO notes_history(user_email, file_name, file_type)
-                VALUES(%s,%s,%s)
+                VALUES(%s, %s, %s)
             """, (
                 session['user'],
-                file.filename,
+                filename,
                 filename.split(".")[-1]
             ))
-
             mysql.connection.commit()
             cur.close()
 
             try:
 
                 # ---------- PDF ----------
-                if filename.endswith('.pdf'):
+                if filename.lower().endswith(".pdf"):
 
                     text = ""
 
                     with open(filepath, "rb") as pdf_file:
-
                         reader = PyPDF2.PdfReader(pdf_file)
 
                         for page in reader.pages:
                             page_text = page.extract_text()
-
                             if page_text:
                                 text += page_text
 
@@ -361,11 +358,8 @@ def notes():
 Read the following study material.
 
 Provide:
-
 1. Short Summary
-
 2. Key Points
-
 3. Five Viva Questions
 
 Study Material:
@@ -381,7 +375,7 @@ Study Material:
                     summary = response.text
 
                 # ---------- IMAGE ----------
-                elif filename.endswith(('.jpg', '.jpeg', '.png')):
+                elif filename.lower().endswith((".jpg", ".jpeg", ".png")):
 
                     image = Image.open(filepath)
 
@@ -396,13 +390,10 @@ Study Material:
                     summary = response.text
 
                 else:
-
                     summary = "Only PDF, JPG, JPEG and PNG files are supported."
 
             except Exception as e:
-              import traceback
-    traceback.print_exc()
-    answer = str(e)
+                summary = f"Error: {str(e)}"
 
     return render_template(
         "notes.html",
