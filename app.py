@@ -51,23 +51,39 @@ def home():
 # ---------------- REGISTER ----------------
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+
     if request.method == 'POST':
+
         name = request.form['name']
         email = request.form['email']
         password = generate_password_hash(request.form['password'])
 
         cur = mysql.connection.cursor()
+
+        # Check if email already exists
+        cur.execute(
+            "SELECT * FROM users WHERE email=%s",
+            (email,)
+        )
+
+        existing_user = cur.fetchone()
+
+        if existing_user:
+            cur.close()
+            return "Email already registered. Please login or use another email."
+
+        # Insert new user
         cur.execute(
             "INSERT INTO users(name, email, password) VALUES(%s, %s, %s)",
             (name, email, password)
         )
+
         mysql.connection.commit()
         cur.close()
 
         return redirect(url_for('login'))
 
     return render_template('register.html')
-
 
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET', 'POST'])
