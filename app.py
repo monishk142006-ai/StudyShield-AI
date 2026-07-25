@@ -129,25 +129,22 @@ def chat():
 
             cur = mysql.connection.cursor()
 
-            cur.execute("""
+            cur.execute(
+                """
                 INSERT INTO chat_history(user_email, question, answer)
                 VALUES(%s, %s, %s)
-            """, (
-                session['user'],
-                question,
-                answer
-            ))
+                """,
+                (session['user'], question, answer)
+            )
 
             mysql.connection.commit()
             cur.close()
 
         except Exception as e:
-            import traceback
-            traceback.print_exc()
-    answer = str(e)
+            answer = str(e)
 
     return render_template(
-        'chat.html',
+        "chat.html",
         answer=answer
     )
 # ---------------- LOGOUT ----------------
